@@ -22,7 +22,7 @@ WINK_CONSECUTIVE_FRAMES = 10
 MOUTH_COUNTER = 0
 EYE_COUNTER = 0
 WINK_COUNTER = 0
-INPUT_MODE = False
+INPUT_MODE = True
 EYE_CLICK = False
 LEFT_WINK = False
 RIGHT_WINK = False
@@ -105,6 +105,9 @@ while True:
 
     nose_point = (nose[3, 0], nose[3, 1])
 
+    if ANCHOR_POINT == (0,0):
+        ANCHOR_POINT = nose_point
+
     # Compute the convex hull for the left and right eye, then
     # visualize each of the eyes
     mouthHull = cv2.convexHull(mouth)
@@ -126,7 +129,7 @@ while True:
                 WINK_COUNTER += 1
 
                 if WINK_COUNTER > WINK_CONSECUTIVE_FRAMES:
-                    pyag.click(button='left')
+                    # pyag.click(button='left')
 
                     WINK_COUNTER = 0
 
@@ -135,7 +138,7 @@ while True:
                 WINK_COUNTER += 1
 
                 if WINK_COUNTER > WINK_CONSECUTIVE_FRAMES:
-                    pyag.click(button='right')
+                    # pyag.click(button='right')
 
                     WINK_COUNTER = 0
         else:
@@ -145,9 +148,11 @@ while True:
             EYE_COUNTER += 1
 
             if EYE_COUNTER > EYE_AR_CONSECUTIVE_FRAMES:
-                SCROLL_MODE = not SCROLL_MODE
+                # SCROLL_MODE = not SCROLL_MODE
                 # INPUT_MODE = not INPUT_MODE
+                pyag.click(button = 'left')
                 EYE_COUNTER = 0
+                # ANCHOR_POINT = nose_point
 
                 # nose point to draw a bounding box around it
 
@@ -157,13 +162,12 @@ while True:
 
     if mar > MOUTH_AR_THRESH:
         MOUTH_COUNTER += 1
-
         if MOUTH_COUNTER >= MOUTH_AR_CONSECUTIVE_FRAMES:
             # if the alarm is not on, turn it on
-            INPUT_MODE = not INPUT_MODE
-            # SCROLL_MODE = not SCROLL_MODE
+            # INPUT_MODE = not INPUT_MODE
+            SCROLL_MODE = not SCROLL_MODE
             MOUTH_COUNTER = 0
-            ANCHOR_POINT = nose_point
+            # ANCHOR_POINT = nose_point
 
     else:
         MOUTH_COUNTER = 0
